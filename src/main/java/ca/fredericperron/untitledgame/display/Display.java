@@ -18,7 +18,7 @@ public class Display {
     private IntBuffer tempBuff;
     private long handle;
 
-    private Display(){
+    public Display(){
         instance = this;
 
         tempBuff = MemoryUtil.memAllocInt(1);
@@ -31,7 +31,7 @@ public class Display {
         }
     }
 
-    public long create(String title, int width, int height, boolean resizable) throws Exception{
+    private long create(String title, int width, int height, boolean resizable) throws Exception{
 
         LibraryUtil.getInstance().setErrorCallBack(System.err);
 
@@ -101,6 +101,6 @@ public class Display {
     private static Display instance;
 
     public static Display getInstance(){
-        return instance == null ? instance = new Display() : instance;
+        return instance;
     }
 }

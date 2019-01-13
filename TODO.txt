@@ -4,5 +4,3 @@ Components of the application:
     - Math system.
     - Render system.
     - Shader system.
-    # Window system.
-    # Library util.
