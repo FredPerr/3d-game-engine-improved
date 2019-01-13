@@ -18,31 +18,17 @@ public class Mesh {
     public Mesh(float[] vertices){
         verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
         verticesBuffer.put(vertices).flip();
-
         vaoId = GL30.glGenVertexArrays();
-        bindVAO();
-
+        GL30.glBindVertexArray(vaoId);
         vboId = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
         GL30.glBufferData(GL30.GL_ARRAY_BUFFER, verticesBuffer, GL30.GL_STATIC_DRAW);
         MemoryUtil.memFree(verticesBuffer);
-
         GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
-
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
-
-        unbindVAO();
-
+        GL30.glBindVertexArray(0);
         if (verticesBuffer != null)
             MemoryUtil.memFree(verticesBuffer);
-    }
-
-    public void bindVAO(){
-        GL30.glBindVertexArray(vaoId);
-    }
-
-    public void unbindVAO(){
-        GL30.glBindVertexArray(0);
     }
 
     public int getVaoId(){

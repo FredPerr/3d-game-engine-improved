@@ -5,12 +5,7 @@ import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.render.model.Mesh;
 import ca.fredericperron.untitledgame.render.shader.ShaderProgram;
-import ca.fredericperron.untitledgame.util.ResourceUtil;
 import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL30.*;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -20,27 +15,32 @@ public class Renderer {
 
     private ShaderProgram shaderProgram;
 
+    Mesh mesh;
+
     public void init() throws Exception {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_VERTEX_SHADER));
         shaderProgram.createFragmentShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_FRAGMENT_SHADER));
         shaderProgram.link();
+
+
     }
 
     public void render(){
         clear();
         checkWindowRatio();
-
     }
 
-    public void clear() {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+    private void renderMesh(Mesh mesh){
+
     }
 
     public void cleanUp(){
-        if (shaderProgram != null) {
-            shaderProgram.cleanUp();
-        }
+        shaderProgram.cleanUp();
+    }
+
+    private void clear() {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
     private void checkWindowRatio(){
