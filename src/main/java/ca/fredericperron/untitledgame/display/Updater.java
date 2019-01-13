@@ -2,6 +2,7 @@ package ca.fredericperron.untitledgame.display;
 
 import ca.fredericperron.untitledgame.Application;
 import ca.fredericperron.untitledgame.ApplicationSettings;
+import ca.fredericperron.untitledgame.display.input.Input;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -29,9 +30,9 @@ public class Updater implements Runnable {
     public void start(){
         running = true;
         if(System.getProperty("os.name").contains("Mac"))
-            updaterThread.start();
-        else
             updaterThread.run();
+        else
+            updaterThread.start();
     }
 
     public void stop(){
@@ -55,8 +56,8 @@ public class Updater implements Runnable {
 
             if (deltaU >= 1) {
                 Display.getInstance().pollEvents();
-                //Including inputs
                 Application.getInstance().update();
+                Input.update();
                 if(Display.getInstance().shouldClose())
                     stop();
                 ticks++;
@@ -79,6 +80,7 @@ public class Updater implements Runnable {
         }
         Application.getInstance().end();
         Application.getInstance().cleanUp();
+        System.exit(0);
     }
 
     private static Updater instance;

@@ -11,7 +11,6 @@ public class Main {
             new Application();
         }catch (Exception e){
             e.printStackTrace();
-            System.exit(-1);
         }
     }
 }

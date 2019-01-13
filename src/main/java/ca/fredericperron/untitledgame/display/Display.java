@@ -2,9 +2,11 @@ package ca.fredericperron.untitledgame.display;
 
 import static ca.fredericperron.untitledgame.ApplicationSettings.*;
 import static org.lwjgl.glfw.GLFW.*;
+import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.util.LibraryUtil;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
@@ -15,13 +17,13 @@ import java.nio.IntBuffer;
  */
 public class Display {
 
-    private IntBuffer tempBuff;
     private long handle;
+    private int width, height;
+    private boolean resized;
 
-    public Display(){
+    private Display(){
         instance = this;
-
-        tempBuff = MemoryUtil.memAllocInt(1);
+        resized = false;
 
         try {
             create(DISPLAY_TITLE, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_RESIZABLE);
@@ -32,7 +34,8 @@ public class Display {
     }
 
     private long create(String title, int width, int height, boolean resizable) throws Exception{
-
+        this.width = width;
+        this.height = height;
         LibraryUtil.getInstance().setErrorCallBack(System.err);
 
         try {
@@ -55,7 +58,19 @@ public class Display {
         if(handle == 0)
             throw new Exception("The window could not be initialized.");
 
+        glfwSetFramebufferSizeCallback(getHandle(), (window, w, h) ->{
+            this.width = w;
+            this.height = h;
+            this.resized = true;
+        });
+
         glfwMakeContextCurrent(handle);
+
+        GL.createCapabilities();
+
+        if(ApplicationSettings.VSYNC)
+            glfwSwapInterval(1);
+
         centerOnScreen();
         glfwShowWindow(handle);
         return handle;
@@ -75,19 +90,12 @@ public class Display {
                     (getVideoMode().height() - getHeight()) / 2);
     }
 
+    public void setResized(boolean resized){
+        this.resized = resized;
+    }
+
     public boolean shouldClose(){
         return glfwWindowShouldClose(getHandle());
-    }
-
-    public int getWidth(){
-        glfwGetWindowSize(getHandle(), tempBuff, null);
-        return tempBuff.get(0);
-    }
-
-
-    public int getHeight(){
-        glfwGetWindowSize(getHandle(), null, tempBuff);
-        return tempBuff.get(0);
     }
 
     public GLFWVidMode getVideoMode(){
@@ -98,9 +106,21 @@ public class Display {
         return this.handle;
     }
 
+    public int getWidth(){
+        return this.width;
+    }
+
+    public int getHeight(){
+        return this.height;
+    }
+
+    public boolean isResized(){
+        return this.resized;
+    }
+
     private static Display instance;
 
     public static Display getInstance(){
-        return instance;
+        return instance == null ? instance = new Display() : instance;
     }
 }

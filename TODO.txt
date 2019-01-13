@@ -1,5 +1,4 @@
 Components of the application:
-    - Input system.
     - File system.
     - Math system.
     - Render system.
