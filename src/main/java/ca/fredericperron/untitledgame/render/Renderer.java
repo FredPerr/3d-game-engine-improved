@@ -6,6 +6,7 @@ import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.render.model.Mesh;
 import ca.fredericperron.untitledgame.render.shader.ShaderProgram;
 import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -15,28 +16,29 @@ public class Renderer {
 
     private ShaderProgram shaderProgram;
 
-    Mesh mesh;
-
     public void init() throws Exception {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_VERTEX_SHADER));
         shaderProgram.createFragmentShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_FRAGMENT_SHADER));
         shaderProgram.link();
-
-
     }
 
-    public void render(){
+    public void render(Mesh mesh){
         clear();
         checkWindowRatio();
-    }
+        shaderProgram.bind();
+        glBindVertexArray(mesh.getVaoId());
+        glEnableVertexAttribArray(0);
+        glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
+        glDisableVertexAttribArray(0);
+        glBindVertexArray(0);
 
-    private void renderMesh(Mesh mesh){
-
+        shaderProgram.unbind();
     }
 
     public void cleanUp(){
-        shaderProgram.cleanUp();
+        if (shaderProgram != null)
+            shaderProgram.cleanUp();
     }
 
     private void clear() {

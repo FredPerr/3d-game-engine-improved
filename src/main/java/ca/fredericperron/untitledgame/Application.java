@@ -4,6 +4,7 @@ import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.display.Updater;
 import ca.fredericperron.untitledgame.display.input.InputKey;
 import ca.fredericperron.untitledgame.render.Renderer;
+import ca.fredericperron.untitledgame.render.model.Mesh;
 import ca.fredericperron.untitledgame.storage.ResourceManager;
 
 /**
@@ -23,6 +24,9 @@ public class Application implements IApplication {
 
     private Renderer renderer;
 
+    //TEST
+    private Mesh mesh;
+
     public Application(){
         instance = this;
         resourceManager = new ResourceManager();
@@ -34,13 +38,24 @@ public class Application implements IApplication {
     public void init() throws Exception{
         Display.getInstance();
         renderer.init();
+
+        float[] positions = new float[]{
+                -0.5f, 0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
+        };
+        int[] indices = new int[]{
+                0, 1, 3, 3, 1, 2,
+        };
+        mesh = new Mesh(positions, indices);
     }
 
     public void update(){
     }
 
     public void render(){
-        renderer.render();
+        renderer.render(mesh);
     }
 
     public void end(){

@@ -1,10 +1,11 @@
 package ca.fredericperron.untitledgame.render.model;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
+import static org.lwjgl.opengl.GL30.*;
+
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * Created by Frédéric Perron on 2019-01-13. This file
@@ -12,30 +13,68 @@ import java.nio.FloatBuffer;
  */
 public class Mesh {
 
-    private FloatBuffer verticesBuffer;
-    private int vaoId, vboId;
+    private final int vaoId;
 
-    public Mesh(float[] vertices){
-        verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
-        verticesBuffer.put(vertices).flip();
-        vaoId = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vaoId);
-        vboId = GL30.glGenBuffers();
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, verticesBuffer, GL30.GL_STATIC_DRAW);
-        MemoryUtil.memFree(verticesBuffer);
-        GL30.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
-        GL30.glBindVertexArray(0);
-        if (verticesBuffer != null)
-            MemoryUtil.memFree(verticesBuffer);
+    private final int posVboId;
+
+    private final int idxVboId;
+
+    private final int vertexCount;
+
+    public Mesh(float[] positions, int[] indices) {
+        FloatBuffer posBuffer = null;
+        IntBuffer indicesBuffer = null;
+        try {
+            vertexCount = indices.length;
+
+            vaoId = glGenVertexArrays();
+            glBindVertexArray(vaoId);
+
+            // Position VBO
+            posVboId = glGenBuffers();
+            posBuffer = MemoryUtil.memAllocFloat(positions.length);
+            posBuffer.put(positions).flip();
+            glBindBuffer(GL_ARRAY_BUFFER, posVboId);
+            glBufferData(GL_ARRAY_BUFFER, posBuffer, GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+            // Index VBO
+            idxVboId = glGenBuffers();
+            indicesBuffer = MemoryUtil.memAllocInt(indices.length);
+            indicesBuffer.put(indices).flip();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idxVboId);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+        } finally {
+            if (posBuffer != null) {
+                MemoryUtil.memFree(posBuffer);
+            }
+            if (indicesBuffer != null) {
+                MemoryUtil.memFree(indicesBuffer);
+            }
+        }
     }
 
-    public int getVaoId(){
-        return this.vaoId;
+    public int getVaoId() {
+        return vaoId;
     }
 
-    public int getVboId(){
-        return this.vboId;
+    public int getVertexCount() {
+        return vertexCount;
+    }
+
+    public void cleanUp() {
+        glDisableVertexAttribArray(0);
+
+        // Delete the VBOs
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDeleteBuffers(posVboId);
+        glDeleteBuffers(idxVboId);
+
+        // Delete the VAO
+        glBindVertexArray(0);
+        glDeleteVertexArrays(vaoId);
     }
 }
