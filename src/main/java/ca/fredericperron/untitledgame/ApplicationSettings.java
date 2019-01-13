@@ -29,6 +29,7 @@ public class ApplicationSettings {
     public static final int CONTROL_MOVE_BACKWARD = GLFW.GLFW_KEY_S;
     public static final int CONTROL_MOVE_UPWARD = GLFW.GLFW_KEY_SPACE;
     public static final int CONTROL_MOVE_DOWNWARD = GLFW.GLFW_KEY_LEFT_SHIFT;
+    public static final int CONTROL_UNGRAB_MOUSE = GLFW.GLFW_KEY_ESCAPE;
 
     //FOLDER
     public static final String RESOURCE_FOLDER_NAME = ".untitledgame";
@@ -39,5 +40,6 @@ public class ApplicationSettings {
     public static final float FOV = (float) Math.toRadians(90);
     public static final float Z_NEAR = 0.01f;
     public static final float Z_FAR = 1000.f;
+    public static final float SENSIVITY = 0.1f;
 
 }

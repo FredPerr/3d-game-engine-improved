@@ -3,6 +3,8 @@ package ca.fredericperron.untitledgame.display;
 import static ca.fredericperron.untitledgame.ApplicationSettings.*;
 import static org.lwjgl.glfw.GLFW.*;
 import ca.fredericperron.untitledgame.ApplicationSettings;
+import ca.fredericperron.untitledgame.display.input.InputKey;
+import ca.fredericperron.untitledgame.display.input.InputMouse;
 import ca.fredericperron.untitledgame.util.LibraryUtil;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
@@ -11,6 +13,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
 /**
@@ -22,18 +25,18 @@ public class Display {
     private long handle;
     private int width, height;
     private boolean resized;
+    private InputKey key_ungrab_mouse = new InputKey(ApplicationSettings.CONTROL_UNGRAB_MOUSE);
+    private InputMouse button_left = new InputMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
 
     private Display(){
         instance = this;
         resized = false;
-
         try {
             create(DISPLAY_TITLE, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_RESIZABLE);
         }catch (Exception e){
             e.printStackTrace();
             System.exit(-1);
         }
-
      }
 
     private long create(String title, int width, int height, boolean resizable) throws Exception{
@@ -82,6 +85,17 @@ public class Display {
         return handle;
     }
 
+    public void setMouseGrabbed(boolean grabbed) {
+        if(!isMouseGrabbed() && grabbed)
+            glfwSetInputMode(getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else if (isMouseGrabbed() && !grabbed)
+            glfwSetInputMode(getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    public boolean isMouseGrabbed() {
+        return glfwGetInputMode(getHandle(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL ? false : true;
+    }
+
     public void pollEvents(){
         glfwPollEvents();
     }
@@ -94,6 +108,14 @@ public class Display {
         glfwSetWindowPos(getHandle(),
                     (getVideoMode().width() - getWidth()) / 2,
                     (getVideoMode().height() - getHeight()) / 2);
+    }
+
+    public void updateGrabbing(){
+        if(Display.getInstance().isMouseGrabbed() && key_ungrab_mouse.isReleased())
+            Display.getInstance().setMouseGrabbed(false);
+        if(!Display.getInstance().isMouseGrabbed() && button_left.isReleased()) {
+            Display.getInstance().setMouseGrabbed(true);
+        }
     }
 
     public void setResized(boolean resized){

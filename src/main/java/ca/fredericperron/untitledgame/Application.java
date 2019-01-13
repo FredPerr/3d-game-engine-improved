@@ -3,11 +3,13 @@ package ca.fredericperron.untitledgame;
 import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.display.Updater;
 import ca.fredericperron.untitledgame.display.input.InputKey;
+import ca.fredericperron.untitledgame.display.input.InputMouse;
 import ca.fredericperron.untitledgame.render.Camera;
 import ca.fredericperron.untitledgame.render.Renderer;
 import ca.fredericperron.untitledgame.render.model.GameObject;
 import ca.fredericperron.untitledgame.render.model.Mesh;
 import ca.fredericperron.untitledgame.storage.ResourceManager;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -26,7 +28,6 @@ public class Application implements IApplication {
 
     private Renderer renderer;
 
-    //TEST
     private GameObject[] objects;
     private Camera camera;
 
@@ -91,7 +92,7 @@ public class Application implements IApplication {
     }
 
     public void update(){
-        updateGrabbing();
+        Display.getInstance().updateGrabbing();
     }
 
     public void render(){
@@ -111,6 +112,8 @@ public class Application implements IApplication {
     }
 
     private void moveCamera(){
+        if(!Display.getInstance().isMouseGrabbed())
+            return;
         if(key_forward.isDown())
             camera.movePosition(0,0,-0.05f);
         if(key_backward.isDown())
@@ -123,10 +126,8 @@ public class Application implements IApplication {
             camera.movePosition(0,0.05f,0);
         if(key_downward.isDown())
             camera.movePosition(0,-0.05f,0);
-    }
 
-    private void updateGrabbing(){
-        //if(Display.getInstance().isMouseGrabbed())
+
     }
 
     public ResourceManager getResourceManager(){
