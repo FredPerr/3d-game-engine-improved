@@ -35,6 +35,9 @@ public class ApplicationSettings {
     public static final String RESOURCE_VERTEX_SHADER = "/resources/rendering/shaders/defaultshader.vs";
     public static final String RESOURCE_FRAGMENT_SHADER = "/resources/rendering/shaders/defaultshader.fs";
 
-
+    //CAMERA
+    public static final float FOV = (float) Math.toRadians(90);
+    public static final float Z_NEAR = 0.01f;
+    public static final float Z_FAR = 1000.f;
 
 }

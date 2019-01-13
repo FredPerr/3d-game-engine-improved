@@ -3,10 +3,10 @@ package ca.fredericperron.untitledgame.render;
 import ca.fredericperron.untitledgame.Application;
 import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.display.Display;
-import ca.fredericperron.untitledgame.render.model.Mesh;
+import ca.fredericperron.untitledgame.render.model.GameObject;
 import ca.fredericperron.untitledgame.render.shader.ShaderProgram;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL30.*;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -15,24 +15,36 @@ import static org.lwjgl.opengl.GL30.*;
 public class Renderer {
 
     private ShaderProgram shaderProgram;
+    private Transformation transformation;
+
+    public Renderer(){
+        transformation = new Transformation();
+    }
 
     public void init() throws Exception {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_VERTEX_SHADER));
         shaderProgram.createFragmentShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_FRAGMENT_SHADER));
         shaderProgram.link();
+
+        shaderProgram.createUniform("matrixProjection");
+        shaderProgram.createUniform("matrixModelView");
     }
 
-    public void render(Mesh mesh){
-        clear();
+    public void render(GameObject[] objects, Camera camera){
         checkWindowRatio();
-        shaderProgram.bind();
-        glBindVertexArray(mesh.getVaoId());
-        glEnableVertexAttribArray(0);
-        glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
 
+        clear();
+        shaderProgram.bind();
+        Matrix4f projectionMatrix = transformation.getProjectionMatrix(ApplicationSettings.FOV, Display.getInstance().getWidth(),
+                Display.getInstance().getHeight(), ApplicationSettings.Z_NEAR, ApplicationSettings.Z_FAR);
+        shaderProgram.setUniform("matrixProjection", projectionMatrix);
+        Matrix4f matrixView = transformation.getViewMatrix(camera);
+        for(GameObject gameItem : objects) {
+            Matrix4f matrixModelView = transformation.getModelViewMatrix(gameItem, matrixView);
+            shaderProgram.setUniform("matrixModelView", matrixModelView);
+            gameItem.getMesh().render();
+        }
         shaderProgram.unbind();
     }
 
@@ -41,14 +53,14 @@ public class Renderer {
             shaderProgram.cleanUp();
     }
 
+    public void checkWindowRatio(){
+        if ( Display.getInstance().isResized() ) {
+            GL11.glViewport(0,0,Display.getInstance().getWidth(), Display.getInstance().getHeight());
+        }
+    }
+
     private void clear() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
-    private void checkWindowRatio(){
-        if ( Display.getInstance().isResized() ) {
-            GL11.glViewport(0,0,Display.getInstance().getWidth(), Display.getInstance().getHeight());
-            Display.getInstance().setResized(false);
-        }
-    }
 }

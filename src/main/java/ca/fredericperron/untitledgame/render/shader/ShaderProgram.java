@@ -1,6 +1,12 @@
 package ca.fredericperron.untitledgame.render.shader;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
@@ -8,6 +14,7 @@ import org.lwjgl.opengl.GL20;
  */
 public class ShaderProgram {
 
+    private final Map<String, Integer> uniforms;
     private final int programId;
     private int vertexShaderId, fragmentShaderId;
 
@@ -15,6 +22,7 @@ public class ShaderProgram {
         programId = GL20.glCreateProgram();
         if(programId == 0)
             throw new Exception("Could not create a Shader.");
+        uniforms = new HashMap<>();
     }
 
     public void createVertexShader(String shaderCode) throws Exception {
@@ -53,6 +61,23 @@ public class ShaderProgram {
         }
     }
 
+    public void setUniform(String uniformName, Matrix4f value) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.mallocFloat(16);
+            value.get(fb);
+            GL20.glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
+        }
+    }
+
+    public void createUniform(String uniformName) throws Exception {
+        int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
+        if (uniformLocation < 0) {
+            throw new Exception("Could not find uniform:" +
+                    uniformName);
+        }
+        uniforms.put(uniformName, uniformLocation);
+    }
+
     public void bind() {
         GL20.glUseProgram(programId);
     }
@@ -60,6 +85,7 @@ public class ShaderProgram {
     public void unbind() {
         GL20.glUseProgram(0);
     }
+
     public void cleanUp() {
         unbind();
         if (programId != 0) {

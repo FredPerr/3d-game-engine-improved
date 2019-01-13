@@ -4,9 +4,11 @@ import static ca.fredericperron.untitledgame.ApplicationSettings.*;
 import static org.lwjgl.glfw.GLFW.*;
 import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.util.LibraryUtil;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
@@ -31,7 +33,8 @@ public class Display {
             e.printStackTrace();
             System.exit(-1);
         }
-    }
+
+     }
 
     private long create(String title, int width, int height, boolean resizable) throws Exception{
         this.width = width;
@@ -72,6 +75,9 @@ public class Display {
             glfwSwapInterval(1);
 
         centerOnScreen();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
         glfwShowWindow(handle);
         return handle;
     }
