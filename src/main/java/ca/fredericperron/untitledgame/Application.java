@@ -127,7 +127,14 @@ public class Application implements IApplication {
         if(key_downward.isDown())
             camera.movePosition(0,-0.05f,0);
 
+        double x = Display.getInstance().getCursorX();
+        double y = Display.getInstance().getCursorY();
 
+        float dx = (float)(Display.getInstance().lastCursorX - x) * ApplicationSettings.SENSIVITY_HORIZONTAL;
+        float dy = (float)(Display.getInstance().lastCursorY - y) * ApplicationSettings.SENSIVITY_VERTICAL;
+        Display.getInstance().lastCursorX = x;
+        Display.getInstance().lastCursorY = y;
+        camera.moveRotation(-dy, -dx, 0);
     }
 
     public ResourceManager getResourceManager(){

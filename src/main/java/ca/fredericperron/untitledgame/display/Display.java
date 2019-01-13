@@ -27,10 +27,13 @@ public class Display {
     private boolean resized;
     private InputKey key_ungrab_mouse = new InputKey(ApplicationSettings.CONTROL_UNGRAB_MOUSE);
     private InputMouse button_left = new InputMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+    private DoubleBuffer temp;
+    public double lastCursorX, lastCursorY;
 
     private Display(){
         instance = this;
         resized = false;
+        temp = MemoryUtil.memAllocDouble(1);
         try {
             create(DISPLAY_TITLE, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_RESIZABLE);
         }catch (Exception e){
@@ -116,6 +119,16 @@ public class Display {
         if(!Display.getInstance().isMouseGrabbed() && button_left.isReleased()) {
             Display.getInstance().setMouseGrabbed(true);
         }
+    }
+
+    public double getCursorX(){
+        glfwGetCursorPos(getHandle(), temp, null);
+        return temp.get(0);
+    }
+
+    public double getCursorY(){
+        glfwGetCursorPos(getHandle(), null, temp);
+        return temp.get(0);
     }
 
     public void setResized(boolean resized){

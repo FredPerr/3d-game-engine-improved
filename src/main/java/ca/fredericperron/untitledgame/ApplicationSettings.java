@@ -40,6 +40,7 @@ public class ApplicationSettings {
     public static final float FOV = (float) Math.toRadians(90);
     public static final float Z_NEAR = 0.01f;
     public static final float Z_FAR = 1000.f;
-    public static final float SENSIVITY = 0.1f;
+    public static final float SENSIVITY_HORIZONTAL = 0.1f;
+    public static final float SENSIVITY_VERTICAL = 0.08f;
 
 }
