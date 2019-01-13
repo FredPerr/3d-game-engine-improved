@@ -2,17 +2,17 @@ package ca.fredericperron.untitledgame;
 
 import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.display.Updater;
-import ca.fredericperron.untitledgame.display.input.Input;
 import ca.fredericperron.untitledgame.display.input.InputKey;
 import ca.fredericperron.untitledgame.render.Renderer;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
+import ca.fredericperron.untitledgame.storage.ResourceManager;
 
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
  * is under copyrights© as mentioned in the README file.
  */
 public class Application implements IApplication {
+
+    private ResourceManager resourceManager;
 
     private InputKey key_forward = new InputKey(ApplicationSettings.CONTROL_MOVE_FORWARD);
     private InputKey key_leftward = new InputKey(ApplicationSettings.CONTROL_MOVE_LEFTWARD);
@@ -25,13 +25,13 @@ public class Application implements IApplication {
 
     public Application(){
         instance = this;
-
-        renderer = new Renderer();
+        resourceManager = new ResourceManager();
+        this.renderer = new Renderer();
         //last method to be called.
         new Updater().start();
     }
 
-    public void init(){
+    public void init() throws Exception{
         Display.getInstance();
         renderer.init();
     }
@@ -40,9 +40,7 @@ public class Application implements IApplication {
     }
 
     public void render(){
-        checkWindowRatio();
-
-        renderer.clear();
+        renderer.render();
     }
 
     public void end(){
@@ -50,15 +48,12 @@ public class Application implements IApplication {
     }
 
     public void cleanUp(){
+        renderer.cleanUp();
     }
 
-    private void checkWindowRatio(){
-        if ( Display.getInstance().isResized() ) {
-            GL11.glViewport(0,0,Display.getInstance().getWidth(), Display.getInstance().getHeight());
-            Display.getInstance().setResized(false);
-        }
+    public ResourceManager getResourceManager(){
+        return this.resourceManager;
     }
-
 
     private static Application instance;
 
