@@ -29,6 +29,7 @@ public class Renderer {
 
         shaderProgram.createUniform("matrixProjection");
         shaderProgram.createUniform("matrixModelView");
+        shaderProgram.createUniform("texture_sampler");
     }
 
     public void render(GameObject[] objects, Camera camera){
@@ -40,6 +41,7 @@ public class Renderer {
                 Display.getInstance().getHeight(), ApplicationSettings.Z_NEAR, ApplicationSettings.Z_FAR);
         shaderProgram.setUniform("matrixProjection", projectionMatrix);
         Matrix4f matrixView = transformation.getViewMatrix(camera);
+        shaderProgram.setUniform("texture_sampler", 0);
         for(GameObject gameItem : objects) {
             Matrix4f matrixModelView = transformation.getModelViewMatrix(gameItem, matrixView);
             shaderProgram.setUniform("matrixModelView", matrixModelView);
