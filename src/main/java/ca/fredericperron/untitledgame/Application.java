@@ -8,6 +8,8 @@ import ca.fredericperron.untitledgame.render.Camera;
 import ca.fredericperron.untitledgame.render.Renderer;
 import ca.fredericperron.untitledgame.render.model.GameObject;
 import ca.fredericperron.untitledgame.render.model.Mesh;
+import ca.fredericperron.untitledgame.render.model.Texture;
+import ca.fredericperron.untitledgame.storage.Image;
 import ca.fredericperron.untitledgame.storage.ResourceManager;
 import org.lwjgl.glfw.GLFW;
 
@@ -21,6 +23,7 @@ public class Application implements IApplication {
     private Renderer renderer;
     private GameObject[] objects;
     private Camera camera;
+    private Texture texture;
 
     public Application(){
         instance = this;
@@ -33,7 +36,7 @@ public class Application implements IApplication {
     public void init() throws Exception{
         Display.getInstance();
         renderer.init();
-
+        texture = new Texture(new Image(getResourceManager().getResourceFolder().getPath("/resources/rendering/textures/test.png")));
         float[] positions = new float[] {
                 // VO
                 -0.5f, 0.5f, 0.5f,
@@ -66,17 +69,32 @@ public class Application implements IApplication {
                 // Back face
                 7, 6, 4, 7, 4, 5,
         };
-        float[] colors = new float[]{
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
-        };
-        Mesh mesh = new Mesh(positions, colors, indices);
+        float[] textCoords = new float[]{
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.5f, 0.0f,
+                0.0f, 0.0f,
+                0.5f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                // For text coords in top face
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.0f, 1.0f,
+                0.5f, 1.0f,
+                // For text coords in right face
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+                // For text coords in left face
+                0.5f, 0.0f,
+                0.5f, 0.5f,
+                // For text coords in bottom face
+                0.5f, 0.0f,
+                1.0f, 0.0f,
+                0.5f, 0.5f,
+                1.0f, 0.5f,};
+        Mesh mesh = new Mesh(positions, textCoords, indices, texture);
         GameObject  go = new GameObject(mesh);
         objects = new GameObject[]{go};
     }
