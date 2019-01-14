@@ -69,6 +69,10 @@ public class ShaderProgram {
         }
     }
 
+    public void setUniform(String uniformName, int value){
+        GL20.glUniform1i(uniforms.get(uniformName), value);
+    }
+
     public void createUniform(String uniformName) throws Exception {
         int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
         if (uniformLocation < 0) {
