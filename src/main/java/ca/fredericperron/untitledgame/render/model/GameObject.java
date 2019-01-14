@@ -7,6 +7,7 @@ import org.joml.Vector3f;
  * is under copyrights© as mentioned in the README file.
  */
 public class GameObject {
+
     private final Mesh mesh;
     private final Vector3f position;
     private float scale;
@@ -19,8 +20,8 @@ public class GameObject {
         rotation = new Vector3f(0, 0, 0);
     }
 
-    public Vector3f getPosition() {
-        return position;
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     public void setPosition(float x, float y, float z) {
@@ -29,22 +30,22 @@ public class GameObject {
         this.position.z = z;
     }
 
-    public float getScale() {
-        return scale;
+    public void setRotation(float x, float y, float z) {
+        this.rotation.x = x;
+        this.rotation.y = y;
+        this.rotation.z = z;
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
+    public float getScale() {
+        return scale;
     }
 
     public Vector3f getRotation() {
         return rotation;
     }
 
-    public void setRotation(float x, float y, float z) {
-        this.rotation.x = x;
-        this.rotation.y = y;
-        this.rotation.z = z;
+    public Vector3f getPosition() {
+        return position;
     }
 
     public Mesh getMesh() {

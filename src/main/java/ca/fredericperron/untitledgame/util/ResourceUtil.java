@@ -37,7 +37,6 @@ public class ResourceUtil {
         if (!replace && exists(path))
             return;
 
-
         try {
             new File(path).getParentFile().mkdirs();
             OutputStream out = new BufferedOutputStream(new FileOutputStream(path));

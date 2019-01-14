@@ -1,5 +1,8 @@
 package ca.fredericperron.untitledgame.render;
 
+import ca.fredericperron.untitledgame.ApplicationSettings;
+import ca.fredericperron.untitledgame.display.Display;
+import ca.fredericperron.untitledgame.display.input.InputKey;
 import org.joml.Vector3f;
 
 /**
@@ -10,6 +13,13 @@ public class Camera {
 
     private final Vector3f position;
     private final Vector3f rotation;
+
+    private InputKey key_forward = new InputKey(ApplicationSettings.CONTROL_MOVE_FORWARD);
+    private InputKey key_leftward = new InputKey(ApplicationSettings.CONTROL_MOVE_LEFTWARD);
+    private InputKey key_rightward = new InputKey(ApplicationSettings.CONTROL_MOVE_RIGHTWARD);
+    private InputKey key_backward = new InputKey(ApplicationSettings.CONTROL_MOVE_BACKWARD);
+    private InputKey key_upward = new InputKey(ApplicationSettings.CONTROL_MOVE_UPWARD);
+    private InputKey key_downward = new InputKey(ApplicationSettings.CONTROL_MOVE_DOWNWARD);
 
     public Camera() {
         position = new Vector3f(0, 0, 0);
@@ -58,5 +68,31 @@ public class Camera {
         rotation.x += offsetX;
         rotation.y += offsetY;
         rotation.z += offsetZ;
+    }
+
+    public void performMovements(){
+        if(!Display.getInstance().isMouseGrabbed())
+            return;
+        if(key_forward.isDown())
+            movePosition(0,0,-0.05f);
+        if(key_backward.isDown())
+            movePosition(0,0,0.04f);
+        if(key_leftward.isDown())
+            movePosition(-0.05f,0,0);
+        if(key_rightward.isDown())
+            movePosition(0.05f,0,0);
+        if(key_upward.isDown())
+            movePosition(0,0.05f,0);
+        if(key_downward.isDown())
+            movePosition(0,-0.05f,0);
+
+        double x = Display.getInstance().getCursorX();
+        double y = Display.getInstance().getCursorY();
+
+        float dx = (float)(Display.getInstance().lastCursorX - x) * ApplicationSettings.SENSITIVITY_HORIZONTAL;
+        float dy = (float)(Display.getInstance().lastCursorY - y) * ApplicationSettings.SENSITIVITY_VERTICAL;
+        Display.getInstance().lastCursorX = x;
+        Display.getInstance().lastCursorY = y;
+        moveRotation(-dy, -dx, 0);
     }
 }

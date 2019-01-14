@@ -18,25 +18,15 @@ import org.lwjgl.glfw.GLFW;
 public class Application implements IApplication {
 
     private ResourceManager resourceManager;
-
-    private InputKey key_forward = new InputKey(ApplicationSettings.CONTROL_MOVE_FORWARD);
-    private InputKey key_leftward = new InputKey(ApplicationSettings.CONTROL_MOVE_LEFTWARD);
-    private InputKey key_rightward = new InputKey(ApplicationSettings.CONTROL_MOVE_RIGHTWARD);
-    private InputKey key_backward = new InputKey(ApplicationSettings.CONTROL_MOVE_BACKWARD);
-    private InputKey key_upward = new InputKey(ApplicationSettings.CONTROL_MOVE_UPWARD);
-    private InputKey key_downward = new InputKey(ApplicationSettings.CONTROL_MOVE_DOWNWARD);
-
     private Renderer renderer;
-
     private GameObject[] objects;
     private Camera camera;
 
     public Application(){
         instance = this;
-        resourceManager = new ResourceManager();
+        this.resourceManager = new ResourceManager();
         this.camera = new Camera();
         this.renderer = new Renderer();
-        //last method to be called.
         new Updater().start();
     }
 
@@ -96,45 +86,17 @@ public class Application implements IApplication {
     }
 
     public void render(){
-        moveCamera();
+        camera.performMovements();
         renderer.render(objects, camera);
     }
 
-    public void end(){
-
-    }
+    public void end(){}
 
     public void cleanUp(){
         renderer.cleanUp();
         for (GameObject go : objects)
             go.getMesh().cleanUp();
-
-    }
-
-    private void moveCamera(){
-        if(!Display.getInstance().isMouseGrabbed())
-            return;
-        if(key_forward.isDown())
-            camera.movePosition(0,0,-0.05f);
-        if(key_backward.isDown())
-            camera.movePosition(0,0,0.04f);
-        if(key_leftward.isDown())
-            camera.movePosition(-0.05f,0,0);
-        if(key_rightward.isDown())
-            camera.movePosition(0.05f,0,0);
-        if(key_upward.isDown())
-            camera.movePosition(0,0.05f,0);
-        if(key_downward.isDown())
-            camera.movePosition(0,-0.05f,0);
-
-        double x = Display.getInstance().getCursorX();
-        double y = Display.getInstance().getCursorY();
-
-        float dx = (float)(Display.getInstance().lastCursorX - x) * ApplicationSettings.SENSIVITY_HORIZONTAL;
-        float dy = (float)(Display.getInstance().lastCursorY - y) * ApplicationSettings.SENSIVITY_VERTICAL;
-        Display.getInstance().lastCursorX = x;
-        Display.getInstance().lastCursorY = y;
-        camera.moveRotation(-dy, -dx, 0);
+        //TODO clear textures.
     }
 
     public ResourceManager getResourceManager(){

@@ -5,16 +5,14 @@ import static org.lwjgl.glfw.GLFW.*;
 import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.display.input.InputKey;
 import ca.fredericperron.untitledgame.display.input.InputMouse;
-import ca.fredericperron.untitledgame.util.LibraryUtil;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
 
 /**
  * Created by Frédéric Perron on 2019-01-10. This file
@@ -45,10 +43,11 @@ public class Display {
     private long create(String title, int width, int height, boolean resizable) throws Exception{
         this.width = width;
         this.height = height;
-        LibraryUtil.getInstance().setErrorCallBack(System.err);
+        GLFWErrorCallback.createPrint(System.err).set();
 
         try {
-            LibraryUtil.getInstance().initGLFW();
+            if(!GLFW.glfwInit())
+                throw new Exception("Could not initialize GLFW library.");
         } catch (Exception e){
             e.printStackTrace();
             System.exit(-1);

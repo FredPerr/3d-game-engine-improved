@@ -20,7 +20,7 @@ public class ApplicationSettings {
 
     //UPDATER
     public static final int FPS = 60;
-    public static final int UPS = 40;
+    public static final int UPS = 60;
 
     //CONTROLS
     public static final int CONTROL_MOVE_FORWARD = GLFW.GLFW_KEY_W;
@@ -40,7 +40,7 @@ public class ApplicationSettings {
     public static final float FOV = (float) Math.toRadians(90);
     public static final float Z_NEAR = 0.01f;
     public static final float Z_FAR = 1000.f;
-    public static final float SENSIVITY_HORIZONTAL = 0.1f;
-    public static final float SENSIVITY_VERTICAL = 0.08f;
+    public static final float SENSITIVITY_HORIZONTAL = 0.1f;
+    public static final float SENSITIVITY_VERTICAL = 0.08f;
 
 }

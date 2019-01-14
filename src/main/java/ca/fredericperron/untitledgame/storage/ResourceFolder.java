@@ -30,6 +30,10 @@ public class ResourceFolder {
         return ru.convertByteArrayToString(extractFile(relativePath));
     }
 
+    public String getPath(String relativeFilePath){
+        return path.concat(relativeFilePath).replace(File.separator, "/");
+    }
+
     private String validPath(String path){
         return path.replace(File.separator, "/");
     }
