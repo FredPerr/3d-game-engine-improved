@@ -4,6 +4,7 @@ import ca.fredericperron.untitledgame.Application;
 import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.render.model.GameObject;
+import ca.fredericperron.untitledgame.render.model.Mesh;
 import ca.fredericperron.untitledgame.render.shader.ShaderProgram;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -30,6 +31,8 @@ public class Renderer {
         shaderProgram.createUniform("matrixProjection");
         shaderProgram.createUniform("matrixModelView");
         shaderProgram.createUniform("texture_sampler");
+        shaderProgram.createUniform("color");
+        shaderProgram.createUniform("useColor");
     }
 
     public void render(GameObject[] objects, Camera camera){
@@ -43,9 +46,12 @@ public class Renderer {
         Matrix4f matrixView = transformation.getViewMatrix(camera);
         shaderProgram.setUniform("texture_sampler", 0);
         for(GameObject gameItem : objects) {
+            Mesh mesh = gameItem.getMesh();
             Matrix4f matrixModelView = transformation.getModelViewMatrix(gameItem, matrixView);
             shaderProgram.setUniform("matrixModelView", matrixModelView);
-            gameItem.getMesh().render();
+            shaderProgram.setUniform("color", mesh.getColor());
+            shaderProgram.setUniform("useColor", mesh.isTextured() ? 0 : 1);
+            mesh.render();
         }
         shaderProgram.unbind();
     }

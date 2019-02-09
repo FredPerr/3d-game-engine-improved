@@ -1,5 +1,6 @@
 package ca.fredericperron.untitledgame;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -42,5 +43,8 @@ public class ApplicationSettings {
     public static final float Z_FAR = 1000.f;
     public static final float SENSITIVITY_HORIZONTAL = 0.1f;
     public static final float SENSITIVITY_VERTICAL = 0.08f;
+
+    //WORLD
+    public static final Vector3f DEFAULT_COLOR = new Vector3f(1,1,1);
 
 }

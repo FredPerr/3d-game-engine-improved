@@ -1,6 +1,7 @@
 package ca.fredericperron.untitledgame.render.shader;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
 
@@ -73,6 +74,10 @@ public class ShaderProgram {
         GL20.glUniform1i(uniforms.get(uniformName), value);
     }
 
+    public void setUniform(String uniformName, Vector3f vec3){
+        GL20.glUniform3f(uniforms.get(uniformName), vec3.x(), vec3.y(), vec3.z());
+    }
+
     public void createUniform(String uniformName) throws Exception {
         int uniformLocation = GL20.glGetUniformLocation(programId, uniformName);
         if (uniformLocation < 0) {
@@ -81,6 +86,8 @@ public class ShaderProgram {
         }
         uniforms.put(uniformName, uniformLocation);
     }
+
+
 
     public void bind() {
         GL20.glUseProgram(programId);

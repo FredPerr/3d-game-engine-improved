@@ -23,7 +23,6 @@ public class Application implements IApplication {
     private Renderer renderer;
     private GameObject[] objects;
     private Camera camera;
-    private Texture texture;
 
     public Application(){
         instance = this;
@@ -36,7 +35,7 @@ public class Application implements IApplication {
     public void init() throws Exception{
         Display.getInstance();
         renderer.init();
-        texture = new Texture(new Image(getResourceManager().getResourceFolder().getPath("/resources/rendering/textures/test.png")));
+        Texture texture = new Texture(new Image(getResourceManager().getResourceFolder().getPath("/resources/rendering/textures/test.png")));
         float[] positions = new float[] {
                 // VO
                 -0.5f, 0.5f, 0.5f,
@@ -94,7 +93,35 @@ public class Application implements IApplication {
                 1.0f, 0.0f,
                 0.5f, 0.5f,
                 1.0f, 0.5f,};
-        Mesh mesh = new Mesh(positions, textCoords, indices, texture);
+
+        float[] normals = {
+                0,0,-1,
+                0,0,-1,
+                0,0,-1,
+                0,0,-1,
+                0,1,0,
+                0,1,0,
+                0,1,0,
+                0,1,0,
+                1,0,0,
+                1,0,0,
+                1,0,0,
+                1,0,0,
+                -1,0,0,
+                -1,0,0,
+                -1,0,0,
+                -1,0,0,
+                0,-1,0,
+                0,-1,0,
+                0,-1,0,
+                0,-1,0,
+                0,0,1,
+                0,0,1,
+                0,0,1,
+                0,0,1,
+        };
+
+        Mesh mesh = new Mesh(positions, textCoords, normals, indices);
         GameObject  go = new GameObject(mesh);
         objects = new GameObject[]{go};
     }
@@ -108,14 +135,13 @@ public class Application implements IApplication {
         renderer.render(objects, camera);
     }
 
-    public void end(){}
-
     public void cleanUp(){
         renderer.cleanUp();
         for (GameObject go : objects)
             go.getMesh().cleanUp();
-        //TODO clear textures.
     }
+
+    public void end(){}
 
     public ResourceManager getResourceManager(){
         return this.resourceManager;
