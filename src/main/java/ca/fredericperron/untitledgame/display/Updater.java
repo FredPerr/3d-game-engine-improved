@@ -10,17 +10,18 @@ import ca.fredericperron.untitledgame.display.input.Input;
  */
 public class Updater implements Runnable {
 
+    private Application application;
     private final Thread updaterThread;
     private boolean running;
 
-    public Updater(){
-        instance = this;
+    public Updater(Application application){
+        this.application = application;
         this.updaterThread = new Thread(this, "UPDATER_THREAD");
     }
 
     public void run() {
         try {
-            Application.getInstance().init();
+            application.init();
             loop();
         }catch (Exception e){
             e.printStackTrace();
@@ -55,18 +56,18 @@ public class Updater implements Runnable {
             initialTime = currentTime;
 
             if (deltaU >= 1) {
-                Display.getInstance().pollEvents();
-                Application.getInstance().update();
+                application.getDisplay().pollEvents();
+                application.update();
                 Input.update();
-                if(Display.getInstance().shouldClose())
+                if(application.getDisplay().shouldClose())
                     stop();
                 ticks++;
                 deltaU--;
             }
 
             if (deltaF >= 1) {
-                Application.getInstance().render();
-                Display.getInstance().swapBuffers();
+                application.render();
+                application.getDisplay().swapBuffers();
                 frames++;
                 deltaF--;
             }
@@ -78,14 +79,8 @@ public class Updater implements Runnable {
                 timer += 1000;
             }
         }
-        Application.getInstance().end();
-        Application.getInstance().cleanUp();
+        application.end();
+        application.cleanUp();
         System.exit(0);
-    }
-
-    private static Updater instance;
-
-    public static Updater getInstance(){
-        return instance;
     }
 }

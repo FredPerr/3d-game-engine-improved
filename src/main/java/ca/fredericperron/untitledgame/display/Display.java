@@ -1,6 +1,5 @@
 package ca.fredericperron.untitledgame.display;
 
-import static ca.fredericperron.untitledgame.ApplicationSettings.*;
 import static org.lwjgl.glfw.GLFW.*;
 import ca.fredericperron.untitledgame.ApplicationSettings;
 import ca.fredericperron.untitledgame.display.input.InputKey;
@@ -28,12 +27,11 @@ public class Display {
     private DoubleBuffer temp;
     public double lastCursorX, lastCursorY;
 
-    private Display(){
-        instance = this;
+    public Display(String title, int width, int height, boolean resizable){
         resized = false;
         temp = MemoryUtil.memAllocDouble(1);
         try {
-            create(DISPLAY_TITLE, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_RESIZABLE);
+            create(title, width, height, resizable);
         }catch (Exception e){
             e.printStackTrace();
             System.exit(-1);
@@ -83,6 +81,10 @@ public class Display {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
+
+        //Only lines ** GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); **
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+
         glfwShowWindow(handle);
         return handle;
     }
@@ -95,7 +97,7 @@ public class Display {
     }
 
     public boolean isMouseGrabbed() {
-        return glfwGetInputMode(getHandle(), GLFW_CURSOR) == GLFW_CURSOR_NORMAL ? false : true;
+        return glfwGetInputMode(getHandle(), GLFW_CURSOR) != GLFW_CURSOR_NORMAL;
     }
 
     public void pollEvents(){
@@ -112,12 +114,11 @@ public class Display {
                     (getVideoMode().height() - getHeight()) / 2);
     }
 
-    public void updateGrabbing(){
-        if(Display.getInstance().isMouseGrabbed() && key_ungrab_mouse.isReleased())
-            Display.getInstance().setMouseGrabbed(false);
-        if(!Display.getInstance().isMouseGrabbed() && button_left.isReleased()) {
-            Display.getInstance().setMouseGrabbed(true);
-        }
+    public void updateGrabbingState(){
+        if(isMouseGrabbed() && key_ungrab_mouse.isReleased())
+            setMouseGrabbed(false);
+        if(!isMouseGrabbed() && button_left.isReleased())
+            setMouseGrabbed(true);
     }
 
     public double getCursorX(){
@@ -156,11 +157,5 @@ public class Display {
 
     public boolean isResized(){
         return this.resized;
-    }
-
-    private static Display instance;
-
-    public static Display getInstance(){
-        return instance == null ? instance = new Display() : instance;
     }
 }

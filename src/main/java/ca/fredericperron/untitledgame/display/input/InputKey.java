@@ -1,5 +1,6 @@
 package ca.fredericperron.untitledgame.display.input;
 
+import ca.fredericperron.untitledgame.Main;
 import ca.fredericperron.untitledgame.display.Display;
 import org.lwjgl.glfw.GLFW;
 
@@ -14,6 +15,6 @@ public class InputKey extends Input {
     }
 
     public boolean isDown() {
-        return GLFW.glfwGetKey(Display.getInstance().getHandle(), getCode()) == GLFW.GLFW_PRESS;
+        return GLFW.glfwGetKey(Main.getApplication().getDisplay().getHandle(), getCode()) == GLFW.GLFW_PRESS;
     }
 }

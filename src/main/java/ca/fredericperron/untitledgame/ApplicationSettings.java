@@ -24,6 +24,7 @@ public class ApplicationSettings {
     public static final int UPS = 60;
 
     //CONTROLS
+    public static final int CONTROL_MOVE_SPRINT = GLFW.GLFW_KEY_LEFT_CONTROL;
     public static final int CONTROL_MOVE_FORWARD = GLFW.GLFW_KEY_W;
     public static final int CONTROL_MOVE_LEFTWARD = GLFW.GLFW_KEY_A;
     public static final int CONTROL_MOVE_RIGHTWARD = GLFW.GLFW_KEY_D;
@@ -38,6 +39,11 @@ public class ApplicationSettings {
     public static final String RESOURCE_FRAGMENT_SHADER = "/resources/rendering/shaders/defaultshader.fs";
 
     //CAMERA
+    public static final float SPEED_FORWARD = 0.03f,
+                                SPEED_SIDEWARD = 0.02f,
+                                SPEED_UPWARD = 0.025f,
+                                SPEED_DOWNWARD = 0.015f,
+                                SPEED_SPRINT_FACTOR = 0.01f;
     public static final float FOV = (float) Math.toRadians(90);
     public static final float Z_NEAR = 0.01f;
     public static final float Z_FAR = 1000.f;

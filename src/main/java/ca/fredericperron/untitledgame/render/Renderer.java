@@ -15,17 +15,19 @@ import org.lwjgl.opengl.GL11;
  */
 public class Renderer {
 
+    private Application application;
     private ShaderProgram shaderProgram;
     private Transformation transformation;
 
-    public Renderer(){
+    public Renderer(Application application){
+        this.application = application;
         transformation = new Transformation();
     }
 
     public void init() throws Exception {
         shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_VERTEX_SHADER));
-        shaderProgram.createFragmentShader(Application.getInstance().getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_FRAGMENT_SHADER));
+        shaderProgram.createVertexShader(application.getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_VERTEX_SHADER));
+        shaderProgram.createFragmentShader(application.getResourceManager().getResourceFolder().extractFileAsString(ApplicationSettings.RESOURCE_FRAGMENT_SHADER));
         shaderProgram.link();
 
         shaderProgram.createUniform("matrixProjection");
@@ -40,8 +42,8 @@ public class Renderer {
 
         clear();
         shaderProgram.bind();
-        Matrix4f projectionMatrix = transformation.getProjectionMatrix(ApplicationSettings.FOV, Display.getInstance().getWidth(),
-                Display.getInstance().getHeight(), ApplicationSettings.Z_NEAR, ApplicationSettings.Z_FAR);
+        Matrix4f projectionMatrix = transformation.getProjectionMatrix(ApplicationSettings.FOV, application.getDisplay().getWidth(),
+                application.getDisplay().getHeight(), ApplicationSettings.Z_NEAR, ApplicationSettings.Z_FAR);
         shaderProgram.setUniform("matrixProjection", projectionMatrix);
         Matrix4f matrixView = transformation.getViewMatrix(camera);
         shaderProgram.setUniform("texture_sampler", 0);
@@ -62,8 +64,8 @@ public class Renderer {
     }
 
     public void checkWindowRatio(){
-        if ( Display.getInstance().isResized() ) {
-            GL11.glViewport(0,0,Display.getInstance().getWidth(), Display.getInstance().getHeight());
+        if ( application.getDisplay().isResized() ) {
+            GL11.glViewport(0,0,application.getDisplay().getWidth(), application.getDisplay().getHeight());
         }
     }
 

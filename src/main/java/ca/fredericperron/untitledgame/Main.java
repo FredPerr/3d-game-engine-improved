@@ -6,9 +6,15 @@ package ca.fredericperron.untitledgame;
  */
 public class Main {
 
+    private static Application application = null;
+
+    public static Application getApplication(){
+        return application;
+    }
+
     public static void main(String[] args){
         try {
-            new Application();
+            application = new Application();
         }catch (Exception e){
             e.printStackTrace();
         }

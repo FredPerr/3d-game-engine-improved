@@ -1,18 +1,21 @@
 package ca.fredericperron.untitledgame.render;
 
+import ca.fredericperron.untitledgame.Application;
 import ca.fredericperron.untitledgame.ApplicationSettings;
+import ca.fredericperron.untitledgame.Main;
 import ca.fredericperron.untitledgame.display.Display;
 import ca.fredericperron.untitledgame.display.input.InputKey;
+import ca.fredericperron.untitledgame.game.movement.Direction;
+import ca.fredericperron.untitledgame.game.movement.Moveable;
 import org.joml.Vector3f;
 
 /**
  * Created by Frédéric Perron on 2019-01-13. This file
  * is under copyrights© as mentioned in the README file.
  */
-public class Camera {
+public class Camera extends Moveable {
 
-    private final Vector3f position;
-    private final Vector3f rotation;
+    private Display display;
 
     private InputKey key_forward = new InputKey(ApplicationSettings.CONTROL_MOVE_FORWARD);
     private InputKey key_leftward = new InputKey(ApplicationSettings.CONTROL_MOVE_LEFTWARD);
@@ -20,79 +23,44 @@ public class Camera {
     private InputKey key_backward = new InputKey(ApplicationSettings.CONTROL_MOVE_BACKWARD);
     private InputKey key_upward = new InputKey(ApplicationSettings.CONTROL_MOVE_UPWARD);
     private InputKey key_downward = new InputKey(ApplicationSettings.CONTROL_MOVE_DOWNWARD);
+    private InputKey key_sprint = new InputKey(ApplicationSettings.CONTROL_MOVE_SPRINT);
 
-    public Camera() {
-        position = new Vector3f(0, 0, 0);
-        rotation = new Vector3f(0, 0, 0);
+    public Camera(Application application, Vector3f position, Vector3f rotation) {
+        super(position, rotation);
+        this.display = application.getDisplay();
     }
 
-    public Camera(Vector3f position, Vector3f rotation) {
-        this.position = position;
-        this.rotation = rotation;
-    }
-
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public void setPosition(float x, float y, float z) {
-        position.x = x;
-        position.y = y;
-        position.z = z;
-    }
-
-    public void movePosition(float offsetX, float offsetY, float offsetZ) {
-        if (offsetZ != 0) {
-            position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
-            position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
-        }
-        if (offsetX != 0) {
-            position.x += (float) Math.sin(Math.toRadians(rotation.y - 90)) * -1.0f * offsetX;
-            position.z += (float) Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
-
-        }
-        position.y += offsetY;
-    }
-
-    public Vector3f getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float x, float y, float z) {
-        rotation.x = x;
-        rotation.y = y;
-        rotation.z = z;
-    }
-
-    public void moveRotation(float offsetX, float offsetY, float offsetZ) {
-        rotation.x += offsetX;
-        rotation.y += offsetY;
-        rotation.z += offsetZ;
-    }
-
-    public void performMovements(){
-        if(!Display.getInstance().isMouseGrabbed())
-            return;
+    public void performMovements(boolean yAxisCalculation){
         if(key_forward.isDown())
-            movePosition(0,0,-0.05f);
+            move(Direction.FORWARD, yAxisCalculation, key_sprint.isDown() ? ApplicationSettings.SPEED_FORWARD+ApplicationSettings.SPEED_SPRINT_FACTOR : ApplicationSettings.SPEED_FORWARD);
         if(key_backward.isDown())
-            movePosition(0,0,0.04f);
+            move(Direction.BACKWARD, yAxisCalculation, ApplicationSettings.SPEED_SIDEWARD);
         if(key_leftward.isDown())
-            movePosition(-0.05f,0,0);
+            move(Direction.LEFTWARD, yAxisCalculation, ApplicationSettings.SPEED_SIDEWARD);
         if(key_rightward.isDown())
-            movePosition(0.05f,0,0);
+            move(Direction.RIGHTWARD, yAxisCalculation, ApplicationSettings.SPEED_SIDEWARD);
         if(key_upward.isDown())
-            movePosition(0,0.05f,0);
+            move(Direction.UPWARD, yAxisCalculation, ApplicationSettings.SPEED_UPWARD);
         if(key_downward.isDown())
-            movePosition(0,-0.05f,0);
+            move(Direction.DOWNWARD, yAxisCalculation, ApplicationSettings.SPEED_DOWNWARD);
+    }
 
-        double x = Display.getInstance().getCursorX();
-        double y = Display.getInstance().getCursorY();
+    public void performRotation(){
+        double x = display.getCursorX();
+        double y = display.getCursorY();
 
-        float dx = (float)(Display.getInstance().lastCursorX - x) * ApplicationSettings.SENSITIVITY_HORIZONTAL;
-        float dy = (float)(Display.getInstance().lastCursorY - y) * ApplicationSettings.SENSITIVITY_VERTICAL;
-        Display.getInstance().lastCursorX = x;
-        Display.getInstance().lastCursorY = y;
-        moveRotation(-dy, -dx, 0);
+        float dx = (float)(display.lastCursorX - x) * ApplicationSettings.SENSITIVITY_HORIZONTAL;
+        float dy = (float)(display.lastCursorY - y) * ApplicationSettings.SENSITIVITY_VERTICAL;
+        display.lastCursorX = x;
+        display.lastCursorY = y;
+        rotate(-dy, -dx, 0);
+    }
+
+    public void performActions(){
+        if(!display.isMouseGrabbed())
+            return;
+
+        performMovements(false);
+        performRotation();
     }
 }

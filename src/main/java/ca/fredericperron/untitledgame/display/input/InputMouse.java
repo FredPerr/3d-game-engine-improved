@@ -1,6 +1,6 @@
 package ca.fredericperron.untitledgame.display.input;
 
-import ca.fredericperron.untitledgame.display.Display;
+import ca.fredericperron.untitledgame.Main;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -14,6 +14,6 @@ public class InputMouse extends Input {
     }
 
     public boolean isDown() {
-        return GLFW.glfwGetMouseButton(Display.getInstance().getHandle(), getCode()) == GLFW.GLFW_PRESS;
+        return GLFW.glfwGetMouseButton(Main.getApplication().getDisplay().getHandle(), getCode()) == GLFW.GLFW_PRESS;
     }
 }

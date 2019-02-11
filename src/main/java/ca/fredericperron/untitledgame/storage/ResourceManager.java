@@ -21,6 +21,7 @@ public class ResourceManager {
         pathsToCopy = new ArrayList<>();
         pathsToCopy.add(ApplicationSettings.RESOURCE_VERTEX_SHADER);
         pathsToCopy.add(ApplicationSettings.RESOURCE_FRAGMENT_SHADER);
+        pathsToCopy.add("/resources/rendering/models/bunny.obj");
         exportFiles();
     }
 

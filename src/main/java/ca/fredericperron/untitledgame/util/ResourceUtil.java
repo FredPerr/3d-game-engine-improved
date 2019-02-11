@@ -10,10 +10,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class ResourceUtil {
 
-    private String convertPathSeparators(String path, String separator) {
-        return path.replace(File.separator, separator);
-    }
-
     public String getAppDataFolderPath() {
         return System.getenv("APPDATA");
     }
