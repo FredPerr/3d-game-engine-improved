@@ -51,16 +51,28 @@ public class Camera extends Moveable {
 
         float dx = (float)(display.lastCursorX - x) * ApplicationSettings.SENSITIVITY_HORIZONTAL;
         float dy = (float)(display.lastCursorY - y) * ApplicationSettings.SENSITIVITY_VERTICAL;
+
+        System.out.println(getRotation().x());
+
+        rotate(-dy, -dx, 0);
+
+
         display.lastCursorX = x;
         display.lastCursorY = y;
-        rotate(-dy, -dx, 0);
+
+        if(getRotation().x() > ApplicationSettings.MIN_PITCH)
+            getRotation().x =  ApplicationSettings.MIN_PITCH;
+        if(getRotation().x() < ApplicationSettings.MAX_PITCH)
+            getRotation().x = ApplicationSettings.MAX_PITCH;
+
+
     }
 
     public void performActions(){
         if(!display.isMouseGrabbed())
             return;
 
-        performMovements(false);
         performRotation();
+        performMovements(false);
     }
 }

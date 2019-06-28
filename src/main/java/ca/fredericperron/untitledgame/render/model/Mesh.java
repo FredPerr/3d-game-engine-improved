@@ -162,4 +162,8 @@ public class Mesh {
         glBindVertexArray(0);
         glDeleteVertexArrays(vaoId);
     }
+
+    public GameObject toGameObject(){
+        return new GameObject(this);
+    }
 }

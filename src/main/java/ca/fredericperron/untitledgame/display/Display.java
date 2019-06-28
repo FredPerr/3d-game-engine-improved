@@ -83,7 +83,7 @@ public class Display {
         GL11.glCullFace(GL11.GL_BACK);
 
         //Only lines ** GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE); **
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        GL11.glPolygonMode(GL11.GL_BACK, GL11.GL_TRIANGLES);
 
         glfwShowWindow(handle);
         return handle;

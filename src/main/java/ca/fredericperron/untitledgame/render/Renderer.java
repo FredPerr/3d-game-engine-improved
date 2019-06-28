@@ -9,6 +9,8 @@ import ca.fredericperron.untitledgame.render.shader.ShaderProgram;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
+
 /**
  * Created by Frédéric Perron on 2019-01-12. This file
  * is under copyrights© as mentioned in the README file.
@@ -37,7 +39,7 @@ public class Renderer {
         shaderProgram.createUniform("useColor");
     }
 
-    public void render(GameObject[] objects, Camera camera){
+    public void render(List<GameObject> objects, Camera camera){
         checkWindowRatio();
 
         clear();

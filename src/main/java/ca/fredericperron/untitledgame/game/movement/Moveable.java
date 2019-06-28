@@ -36,7 +36,7 @@ public class Moveable implements IMoveable{
     @Override
     public void rotate(float dx, float dy, float dz) {
         //TODO Block the pitch
-        rotation.add(dx , dy, dz);
+        rotation.add(dx, dy, dz);
     }
 
     @Override

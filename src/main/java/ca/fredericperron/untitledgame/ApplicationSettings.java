@@ -17,7 +17,7 @@ public class ApplicationSettings {
     public static final int DISPLAY_WIDTH = 720;
     public static final int DISPLAY_HEIGHT = 480;
     public static final boolean DISPLAY_RESIZABLE = true;
-    public static final boolean VSYNC = true;
+    public static final boolean VSYNC = false;
 
     //UPDATER
     public static final int FPS = 60;
@@ -47,8 +47,10 @@ public class ApplicationSettings {
     public static final float FOV = (float) Math.toRadians(90);
     public static final float Z_NEAR = 0.01f;
     public static final float Z_FAR = 1000.f;
-    public static final float SENSITIVITY_HORIZONTAL = 0.1f;
-    public static final float SENSITIVITY_VERTICAL = 0.08f;
+    public static final float SENSITIVITY_HORIZONTAL = 0.13f;
+    public static final float SENSITIVITY_VERTICAL = 0.1f;
+    public static final float MAX_PITCH = -90;
+    public static final float MIN_PITCH = 90;
 
     //WORLD
     public static final Vector3f DEFAULT_COLOR = new Vector3f(1,1,1);
